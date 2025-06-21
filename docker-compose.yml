@@ -1,0 +1,141 @@
+# docker-compose.yml
+version: '3.8'
+
+volumes:
+  huggingface_cache:
+
+services:
+  # This is a helper service that only builds the base image.
+  vllm-base:
+    image: vllm-base:latest
+    build:
+      context: .
+      dockerfile: dockerfiles/base.Dockerfile
+
+  # --- Service for Llama 2 13B Model ---
+  llama2-13b:
+    build:
+      context: .
+      dockerfile: dockerfiles/llama2-13b.Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - huggingface_cache:/root/.cache/huggingface
+    devices:
+      - /dev/kfd
+      - /dev/dri
+    privileged: true
+    depends_on:
+      - vllm-base
+
+  # --- Service for Mistral 7B Model ---
+  mistral7b:
+    build:
+      context: .
+      dockerfile: dockerfiles/mistral7b.Dockerfile
+    ports:
+      - "8001:8001"
+    volumes:
+      - huggingface_cache:/root/.cache/huggingface
+    devices:
+      - /dev/kfd
+      - /dev/dri
+    privileged: true
+    depends_on:
+      - vllm-base
+
+  # --- Service for CodeLlama 7B Model ---
+  codellama7b:
+    build:
+      context: .
+      dockerfile: dockerfiles/codellama7b.Dockerfile
+    ports:
+      - "8002:8002"
+    volumes:
+      - huggingface_cache:/root/.cache/huggingface
+    devices:
+      - /dev/kfd
+      - /dev/dri
+    privileged: true
+    depends_on:
+      - vllm-base
+
+  # --- Service for Phi-2 Model ---
+  phi2:
+    build:
+      context: .
+      dockerfile: dockerfiles/phi2.Dockerfile
+    ports:
+      - "8003:8003"
+    volumes:
+      - huggingface_cache:/root/.cache/huggingface
+    devices:
+      - /dev/kfd
+      - /dev/dri
+    privileged: true
+    depends_on:
+      - vllm-base
+
+  # --- Service for Qwen 7B Model ---
+  qwen:
+    build:
+      context: .
+      dockerfile: dockerfiles/qwen.Dockerfile
+    ports:
+      - "8004:8004"
+    volumes:
+      - huggingface_cache:/root/.cache/huggingface
+    devices:
+      - /dev/kfd
+      - /dev/dri
+    privileged: true
+    depends_on:
+      - vllm-base
+
+  # --- Service for Mixtral 8x7B Model ---
+  mixtral:
+    build:
+      context: .
+      dockerfile: dockerfiles/mixtral.Dockerfile
+    ports:
+      - "8005:8005"
+    volumes:
+      - huggingface_cache:/root/.cache/huggingface
+    devices:
+      - /dev/kfd
+      - /dev/dri
+    privileged: true
+    depends_on:
+      - vllm-base
+
+  # --- Service for Qwen3 14B Model ---
+  qwen3-14b:
+    build:
+      context: .
+      dockerfile: dockerfiles/qwen3_14b.Dockerfile
+    ports:
+      - "8006:8006"
+    volumes:
+      - huggingface_cache:/root/.cache/huggingface
+    devices:
+      - /dev/kfd
+      - /dev/dri
+    privileged: true
+    depends_on:
+      - vllm-base
+
+  # --- Service for Phi-4 Mini Model ---
+  phi4:
+    build:
+      context: .
+      dockerfile: dockerfiles/phi4_4bit.Dockerfile
+    ports:
+      - "8007:8007"
+    volumes:
+      - huggingface_cache:/root/.cache/huggingface
+    devices:
+      - /dev/kfd
+      - /dev/dri
+    privileged: true
+    depends_on:
+      - vllm-base

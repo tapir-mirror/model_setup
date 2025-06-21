@@ -1,0 +1,20 @@
+# Use an official ROCm PyTorch base image.
+# This image includes ROCm drivers, PyTorch with ROCm support, and Python.
+# It's recommended to use a recent version.
+FROM rocm
+
+# Set a working directory inside the container
+WORKDIR /app
+
+# Install VLLM. Using --no-cache-dir reduces the final image size.
+# VLLM will automatically detect the ROCm environment and build the necessary extensions.
+RUN pip install --no-cache-dir vllm
+
+# Expose port 8000, which is the default port for vllm serve.
+# This documents which port the container will listen on.
+EXPOSE 8002
+
+#
+# It is critical to add "--host 0.0.0.0" to make the server accessible
+# from outside the container. We also explicitly set the port.
+CMD ["vllm", "serve", "mistralai/Magistral-Small-2506", "--host", "0.0.0.0", "--port", "8002"]

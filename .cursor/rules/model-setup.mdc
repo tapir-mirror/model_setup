@@ -1,0 +1,47 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Model Setup Project Structure
+
+This project contains configurations for running multiple language models using vLLM with Docker.
+
+## Core Files
+- [docker-compose.yml](mdc:docker-compose.yml): Main orchestration file that defines all model services and their configurations
+- [dockerfiles/base.Dockerfile](mdc:dockerfiles/base.Dockerfile): Base Dockerfile for common dependencies
+- [dockerfiles/llama2-13b.Dockerfile](mdc:dockerfiles/llama2-13b.Dockerfile): Configuration for Llama 2 13B model (8-bit quantization)
+- [dockerfiles/mistral7b.Dockerfile](mdc:dockerfiles/mistral7b.Dockerfile): Configuration for Mistral 7B model (FP16)
+- [dockerfiles/codellama7b.Dockerfile](mdc:dockerfiles/codellama7b.Dockerfile): Configuration for CodeLlama 7B model (8-bit)
+- [dockerfiles/phi2.Dockerfile](mdc:dockerfiles/phi2.Dockerfile): Configuration for Phi-2 model (FP16)
+- [dockerfiles/qwen.Dockerfile](mdc:dockerfiles/qwen.Dockerfile): Configuration for Qwen 7B model (4-bit)
+- [dockerfiles/mixtral.Dockerfile](mdc:dockerfiles/mixtral.Dockerfile): Configuration for Mixtral 8x7B model (4-bit)
+- [dockerfiles/qwen3_14b.Dockerfile](mdc:dockerfiles/qwen3_14b.Dockerfile): Configuration for Qwen3 14B model (AWQ 4-bit)
+- [dockerfiles/phi4_4bit.Dockerfile](mdc:dockerfiles/phi4_4bit.Dockerfile): Configuration for Phi-4 Mini model (4-bit)
+
+## Memory Utilization
+The project is configured for AMD GPUs with memory utilization carefully balanced:
+- Llama-2-13B (8-bit): 10.4%
+- Mistral-7B (FP16): 10.4%
+- CodeLlama-7B (8-bit): 5.7%
+- Phi-2 (FP16): 4.7%
+- Qwen-7B (4-bit): 3.6%
+- Mixtral-8x7B (4-bit): 17.7%
+- Qwen3-14B (AWQ 4-bit): 7.2%
+- Phi-4-Mini (4-bit): 2.8%
+
+Total GPU Memory Usage: 62.5%
+
+## Service Configuration
+Each model service in [docker-compose.yml](mdc:docker-compose.yml):
+- Uses shared HuggingFace cache volume
+- Has unique port allocation (8000-8007)
+- Configured for AMD GPU access
+- Depends on vllm-base service
+
+## Important Notes
+- All services use AMD GPU driver configuration
+- Memory utilization is optimized for running multiple models simultaneously
+- HuggingFace cache is shared across all services to optimize storage
+- All model-specific Dockerfiles are located in the `dockerfiles` directory
+- Qwen3 14B uses AWQ quantization for better performance while maintaining quality
